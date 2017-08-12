@@ -8,11 +8,11 @@ Base Mode:
 - [x] GET request to the database working
 - [x] Created task stored in database. POST request
 - [x] After sending task to db, view should be updated with all tasks
-- [ ] Each task should have an option to 'Complete' or 'Delete'.
-- [ ] If complete is clicked, the task should indicate that it is complete (use .toggleClass()?) PUT request
-- [ ] Store complete true or false in database
-- [ ] Delete button click should remove task from database and view. DELETE request
-- [ ] Inlclude .sql file
+- [x] Each task should have an option to 'Complete' or 'Delete'.
+- [x] If complete is clicked, the task should indicate that it is complete PUT request
+- [x] Store complete true or false in database
+- [x] Delete button click removes task from database and view. DELETE request
+- [x] Inlclude .sql file
 - [ ] Style points
 
 Hard mode
