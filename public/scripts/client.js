@@ -4,7 +4,7 @@ $(document).ready(function () {
     console.log('jquery sourced');
     getTasks()
 
-    $('#createTask').on('click', saveTasks)
+    $('#createTask').on('click', saveTask);
 
 });
 
@@ -38,6 +38,12 @@ function displayTasks(tasks) {
     $('#tasks').empty();
     console.log('Display tasks', tasks);
     tasks.forEach(function (taskItem) {
-        $('#tasks').append('<div class="task-item">' + taskItem.task + '</div>');
+        $('#tasks').append(
+            '<div class="task-item" data-id="' + taskItem.id + '">' +
+            '<span class="complete"><button class="completeButton">Complete</button></span>' +
+            '<span class="task">' + taskItem.task + '</span>' +
+            '<span class="delete"><button class="deleteButton">Delete</button></span>' +
+            '</div>'
+        );
     });
 }
