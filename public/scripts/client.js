@@ -4,13 +4,13 @@ $(document).ready(function () {
     console.log('jquery sourced');
     getTasks()
 
-    $('#createTask').on('click', saveTask);
+    $('#createTask').on('click', createTask);
     $('#tasks').on('click', '.completeButton', completeTask);
     $('#tasks').on('click', '.deleteButton', deleteTask);
 
 });
 
-function saveTask() {
+function createTask() {
     var newTask = {
         task: $('#addTaskInput').val(),
         completed: false
@@ -20,6 +20,7 @@ function saveTask() {
         url: '/tasks',
         data: newTask,
         success: function (response) {
+            $('#addTaskInput').val('');
             getTasks();
         }
     })
