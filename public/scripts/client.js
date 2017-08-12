@@ -5,10 +5,12 @@ $(document).ready(function () {
     getTasks()
 
     $('#createTask').on('click', saveTask);
+    $('#tasks').on('click', '.completeButton', completeTask);
+    // $('#tasks').on('click', '.deleteTask', deleteTask);
 
 });
 
-function saveTasks() {
+function saveTask() {
 
     var newTask = {
         task: $('#addTaskInput').val(),
@@ -40,10 +42,28 @@ function displayTasks(tasks) {
     tasks.forEach(function (taskItem) {
         $('#tasks').append(
             '<div class="task-item" data-id="' + taskItem.id + '">' +
-            '<span class="complete"><button class="completeButton">Complete</button></span>' +
+            '<span class="status"><button class="completeButton">Complete</button></span>' +
             '<span class="task">' + taskItem.task + '</span>' +
             '<span class="delete"><button class="deleteButton">Delete</button></span>' +
             '</div>'
         );
+
     });
+}
+
+function completeTask() {
+    var taskId = $(this).parent().parent().data().id;
+    var status = $(this).parent();
+    
+    $.ajax({
+        method: 'PUT',
+        url: '/tasks/' + taskId,
+        data: {
+            completed: true
+        },
+        success: function (response) {
+            status.addClass('completed');
+        }
+    })
+
 }
