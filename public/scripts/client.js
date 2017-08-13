@@ -105,7 +105,7 @@ function displayTasks(tasks) {
 
         taskData.$sectionAddedTo.prepend(
             '<div class="task-item" data-id="' + taskItem.id + '">' +
-            '<div class="task">' + taskItem.task + '</div>' +
+            '<div class="task"><h4>' + taskItem.task + '</h4></div>' +
             '<div>' +
             '<span ' + taskData.status + '"><button class="completeButton btn btn-primary">' + taskData.buttonText + '</button></span>' +
             '<span class="delete"><button class="deleteButton btn btn-danger">Delete</button></span>' +
