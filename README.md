@@ -22,4 +22,5 @@ Pro Mode
 - [x] Bring completed tasks to bottom of page, remaining tasks stay at top
 
 Stretch
+- [ ] Add are you sure prompt to a modal window alert
 - [ ] Enable editing of the tasks
