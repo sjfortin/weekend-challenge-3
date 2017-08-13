@@ -3,43 +3,45 @@ var deleteConfirmationAnswered = true;
 
 $(document).ready(function () {
     console.log('jquery sourced');
-    getTasks()
+    
+    // Display 
+    getTodos()
 
-    $('#createTask').on('click', createTask);
-    $('#tasks').on('click', '.completeButton', completeTask);
-    $('#tasks').on('click', '.deleteButton', confirmDelete);
+    $('#createTodo').on('click', createTodo);
+    $('#todos').on('click', '.completeButton', completeTodo);
+    $('#todos').on('click', '.deleteButton', confirmDelete);
 });
 
-function createTask() {
-    var newTask = {
-        task: $('#addTaskInput').val(),
+function createTodo() {
+    var newTodo = {
+        todo: $('#addTodoInput').val(),
         completed: false
     }
-    if (newTask.task.length !== 0) {
+    if (newTodo.todo.length !== 0) {
         $.ajax({
             method: 'POST',
-            url: '/tasks',
-            data: newTask,
+            url: '/todos',
+            data: newTodo,
             success: function (response) {
-                $('#addTaskInput').val('');
-                getTasks();
+                $('#addTodoInput').val('');
+                getTodos();
             }
         })
     }
 }
 
-function getTasks() {
+function getTodos() {
     $.ajax({
         method: 'GET',
-        url: '/tasks',
+        url: '/todos',
         success: function (response) {
-            displayTasks(response);
+            displayTodos(response);
         }
     })
 }
 
-function completeTask() {
-    var taskId = $(this).parent().parent().parent().data().id;
+function completeTodo() {
+    var todoId = $(this).parent().parent().parent().data().id;
 
     if ($(this).parent().hasClass('completed')) {
         var newCompleteStatus = false
@@ -49,12 +51,12 @@ function completeTask() {
 
     $.ajax({
         method: 'PUT',
-        url: '/tasks/' + taskId,
+        url: '/todos/' + todoId,
         data: {
             completed: newCompleteStatus
         },
         success: function (response) {
-            getTasks();
+            getTodos();
         }
     })
 }
@@ -64,22 +66,22 @@ function confirmDelete() {
         deleteConfirmationAnswered = false;
         console.log('delete button clicked', deleteConfirmationAnswered);
 
-        var taskId = $(this).parent().parent().parent().data().id;
+        var todoId = $(this).parent().parent().parent().data().id;
 
-        $('#deleteConfirm').html('<p>Are you sure you want to delete the task: <em>' + $(this).parent().parent().parent().children('.task').text() + '</em>? <button class="confirmDeleteYes btn btn-primary">Yes</button><button class="confirmDeleteNo btn btn-danger">No</button></p>');
+        $('#deleteConfirm').html('<p>Are you sure you want to delete the todo: <em>' + $(this).parent().parent().parent().children('.todo').text() + '</em>? <button class="confirmDeleteYes btn btn-primary">Yes</button><button class="confirmDeleteNo btn btn-danger">No</button></p>');
 
-        $('#tasks').on('click', '.confirmDeleteYes', function () {
+        $('#todos').on('click', '.confirmDeleteYes', function () {
             $.ajax({
                 method: 'DELETE',
-                url: '/tasks/' + taskId,
+                url: '/todos/' + todoId,
                 success: function (response) {
-                    getTasks();
+                    getTodos();
                     $('#deleteConfirm').html('');
                     deleteConfirmationAnswered = true;
                 }
             })
         });
-        $('#tasks').on('click', '.confirmDeleteNo', function () {
+        $('#todos').on('click', '.confirmDeleteNo', function () {
             $('#deleteConfirm').html('');
             deleteConfirmationAnswered = true;
         });
@@ -88,26 +90,26 @@ function confirmDelete() {
     }
 }
 
-function displayTasks(tasks) {
-    $('#completedTasks, #incompleteTasks').empty();
-    var taskData = {};
+function displayTodos(todos) {
+    $('#completedTodos, #incompleteTodos').empty();
+    var todoData = {};
 
-    tasks.forEach(function (taskItem) {
-        if (taskItem.completed === true) {
-            taskData.status = 'class="completed';
-            taskData.$sectionAddedTo = $('#completedTasks');
-            taskData.buttonText = 'Move to Incomplete'
+    todos.forEach(function (todoItem) {
+        if (todoItem.completed === true) {
+            todoData.status = 'class="completed';
+            todoData.$sectionAddedTo = $('#completedTodos');
+            todoData.buttonText = 'Move to Incomplete'
         } else {
-            taskData.status = 'class="incomplete';
-            taskData.$sectionAddedTo = $('#incompleteTasks');
-            taskData.buttonText = 'Complete'
+            todoData.status = 'class="incomplete';
+            todoData.$sectionAddedTo = $('#incompleteTodos');
+            todoData.buttonText = 'Complete'
         }
 
-        taskData.$sectionAddedTo.prepend(
-            '<div class="task-item" data-id="' + taskItem.id + '">' +
-            '<div class="task"><h4>' + taskItem.task + '</h4></div>' +
+        todoData.$sectionAddedTo.prepend(
+            '<div class="todo-item" data-id="' + todoItem.id + '">' +
+            '<div class="todo"><h4>' + todoItem.todo + '</h4></div>' +
             '<div>' +
-            '<span ' + taskData.status + '"><button class="completeButton btn btn-primary">' + taskData.buttonText + '</button></span>' +
+            '<span ' + todoData.status + '"><button class="completeButton btn btn-primary">' + todoData.buttonText + '</button></span>' +
             '<span class="delete"><button class="deleteButton btn btn-danger">Delete</button></span>' +
             '</div>' +
             '</div>'

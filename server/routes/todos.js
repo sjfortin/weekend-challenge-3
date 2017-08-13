@@ -8,7 +8,7 @@ router.post('/', function (req, res) {
             console.log('Error connecting to database', errorConnectingToDatabase);
             res.sendStatus(500);
         } else {
-            client.query('INSERT INTO tasks (task, completed) VALUES ($1, $2);', [req.body.task, req.body.completed], function (errorMakingQuery, result) {
+            client.query('INSERT INTO to_do_app (todo, completed) VALUES ($1, $2);', [req.body.todo, req.body.completed], function (errorMakingQuery, result) {
                 done();
                 if (errorMakingQuery) {
                     console.log('Error making database query', errorMakingQuery);
@@ -27,7 +27,7 @@ router.get('/', function (req, res) {
             console.log('Error connecting to database', errorConnectingToDatabase);
             res.sendStatus(500);
         } else {
-            client.query('SELECT * FROM tasks;', function (errorMakingQuery, result) {
+            client.query('SELECT * FROM to_do_app ;', function (errorMakingQuery, result) {
                 done();
                 if (errorMakingQuery) {
                     console.log('Error making database query', errorMakingQuery);
@@ -41,15 +41,15 @@ router.get('/', function (req, res) {
 });
 
 router.put('/:id', function (req, res) {
-    var taskId = req.params.id;
+    var todoId = req.params.id;
     console.log('');
     pool.connect(function (errorConnectingToDatabase, client, done) {
         if (errorConnectingToDatabase) {
             console.log('Error connecting to database', errorConnectingToDatabase);
             res.sendStatus(500);
         } else {
-            client.query('UPDATE tasks SET completed=$1 WHERE id=$2',
-                [req.body.completed, taskId],
+            client.query('UPDATE to_do_app  SET completed=$1 WHERE id=$2',
+                [req.body.completed, todoId],
                 function (errorMakingQuery, result) {
                     done();
                     if (errorMakingQuery) {
@@ -64,15 +64,15 @@ router.put('/:id', function (req, res) {
 });
 
 router.delete('/:id', function (req, res) {
-    var taskId = req.params.id;
+    var todoId = req.params.id;
     console.log('');
     pool.connect(function (errorConnectingToDatabase, client, done) {
         if (errorConnectingToDatabase) {
             console.log('Error connecting to database', errorConnectingToDatabase);
             res.sendStatus(500);
         } else {
-            client.query('DELETE FROM tasks WHERE id=$1',
-                [taskId],
+            client.query('DELETE FROM to_do_app WHERE id=$1',
+                [todoId],
                 function (errorMakingQuery, result) {
                     done();
                     if (errorMakingQuery) {
