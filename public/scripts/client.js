@@ -3,7 +3,7 @@ var deleteConfirmationAnswered = true;
 
 $(document).ready(function () {
     console.log('jquery sourced');
-    
+
     // Display todos on DOM load
     getTodos()
 
@@ -11,6 +11,8 @@ $(document).ready(function () {
     $('#createTodo').on('click', createTodo);
     $('#todos').on('click', '.completeButton', completeTodo);
     $('#todos').on('click', '.deleteButton', confirmDelete);
+    $('#todos').on('click', '.confirmDeleteYes', deleteTodo);
+    $('#todos').on('click', '.confirmDeleteNo', resetDeleteTodo);
 });
 
 // Save todo input to database
@@ -65,36 +67,31 @@ function completeTodo() {
     })
 }
 
-// If delete button clicked, ask user to confirm deletion. 
-// If confirmed, delete todo from view and database
+// Display are you sure you want to delete text and buttons
 function confirmDelete() {
-
-    // Prevent user from cilcking on another delete button if current delete button confirmation has not been answered
-    if (deleteConfirmationAnswered === true) {
-        deleteConfirmationAnswered = false;
-
         var todoId = $(this).parent().parent().parent().data().id;
+        var $buttonDiv = $(this).parent().parent();
+        console.log($(this).parent().siblings().html());
+        
+        $(this).parent().siblings('.confirm').html('<p data-deleteid="' + todoId + '">Are you sure you want to delete the todo: <em>' + $(this).parent().parent().parent().children('.todo').text() + '</em>? <button class="confirmDeleteYes btn btn-sm btn-primary">Yes</button><button class="confirmDeleteNo btn btn-sm btn-danger">No</button></p>');
+}
 
-        $('#deleteConfirm').html('<p>Are you sure you want to delete the todo: <em>' + $(this).parent().parent().parent().children('.todo').text() + '</em>? <button class="confirmDeleteYes btn btn-primary">Yes</button><button class="confirmDeleteNo btn btn-danger">No</button></p>');
+// Delete todo from view and database
+function deleteTodo() {
+    var todoId = $(this).parent().data().deleteid;
+    
+        $.ajax({
+            method: 'DELETE',
+            url: '/todos/' + todoId,
+            success: function (response) {
+                getTodos();
+            }
+        })
+}
 
-        $('#todos').on('click', '.confirmDeleteYes', function () {
-            $.ajax({
-                method: 'DELETE',
-                url: '/todos/' + todoId,
-                success: function (response) {
-                    getTodos();
-                    $('#deleteConfirm').html('');
-                    deleteConfirmationAnswered = true;
-                }
-            })
-        });
-        $('#todos').on('click', '.confirmDeleteNo', function () {
-            $('#deleteConfirm').html('');
-            deleteConfirmationAnswered = true;
-        });
-    } else {
-        alert('Confirm if you want to delete previous item selected first');
-    }
+// Remove delete text and buttons if user doesn't want to delete
+function resetDeleteTodo() {
+    $(this).parent().html('');
 }
 
 // Display all todos on the view
@@ -119,7 +116,7 @@ function displayTodos(todos) {
             '<div class="todo"><h4>' + todoItem.todo + '</h4></div>' +
             '<div>' +
             '<span ' + todoData.status + '"><button class="completeButton btn btn-primary">' + todoData.buttonText + '</button></span>' +
-            '<span class="delete"><button class="deleteButton btn btn-danger">Delete</button></span>' +
+            '<span class="delete"><button class="deleteButton btn btn-danger">Delete</button></span><span class="confirm"></span>' +
             '</div>' +
             '</div>'
         );
