@@ -6,7 +6,7 @@ $(document).ready(function () {
 
     $('#createTask').on('click', createTask);
     $('#tasks').on('click', '.completeButton', completeTask);
-    $('#tasks').on('click', '.deleteButton', deleteTask);
+    $('#tasks').on('click', '.deleteButton', confirmDelete);
 
 });
 
@@ -57,8 +57,8 @@ function completeTask() {
     })
 }
 
-function deleteTask() {
-    var taskId = $(this).parent().parent().data().id;
+function deleteTask(taskId) {
+    // var taskId = $(this).parent().parent().data().id;
 
     $.ajax({
         method: 'DELETE',
@@ -68,6 +68,29 @@ function deleteTask() {
         }
     })
 }
+
+function confirmDelete() {
+    var taskId = $(this).parent().parent().data().id;
+
+    $('#deleteConfirm').html('<p>Are you sure you want to delete? <button class="confirmDeleteYes">Yes</button><button class="confirmDeleteNo">No</button></p>');
+
+    $('#tasks').on('click', '.confirmDeleteYes', function(){
+        $.ajax({
+            method: 'DELETE',
+            url: '/tasks/' + taskId,
+            success: function (response) {
+                getTasks();
+                $('#deleteConfirm').html('');
+            }
+        })
+    });
+    $('#tasks').on('click', '.confirmDeleteNo', function() {
+        $('#deleteConfirm').html('');        
+    });
+
+}
+
+
 
 function displayTasks(tasks) {
     $('#completedTasks, #incompleteTasks').empty();
