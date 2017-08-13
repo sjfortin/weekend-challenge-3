@@ -4,14 +4,16 @@ var deleteConfirmationAnswered = true;
 $(document).ready(function () {
     console.log('jquery sourced');
     
-    // Display 
+    // Display todos on DOM load
     getTodos()
 
+    // Event Listeners
     $('#createTodo').on('click', createTodo);
     $('#todos').on('click', '.completeButton', completeTodo);
     $('#todos').on('click', '.deleteButton', confirmDelete);
 });
 
+// Save todo input to database
 function createTodo() {
     var newTodo = {
         todo: $('#addTodoInput').val(),
@@ -30,6 +32,7 @@ function createTodo() {
     }
 }
 
+// GET todos from database
 function getTodos() {
     $.ajax({
         method: 'GET',
@@ -40,6 +43,7 @@ function getTodos() {
     })
 }
 
+// Toggle todo from complete to incomplete and update in database
 function completeTodo() {
     var todoId = $(this).parent().parent().parent().data().id;
 
@@ -61,10 +65,13 @@ function completeTodo() {
     })
 }
 
+// If delete button clicked, ask user to confirm deletion. 
+// If confirmed, delete todo from view and database
 function confirmDelete() {
+
+    // Prevent user from cilcking on another delete button if current delete button confirmation has not been answered
     if (deleteConfirmationAnswered === true) {
         deleteConfirmationAnswered = false;
-        console.log('delete button clicked', deleteConfirmationAnswered);
 
         var todoId = $(this).parent().parent().parent().data().id;
 
@@ -90,10 +97,12 @@ function confirmDelete() {
     }
 }
 
+// Display all todos on the view
 function displayTodos(todos) {
     $('#completedTodos, #incompleteTodos').empty();
     var todoData = {};
 
+    // Determine if todo should be added to the complete or incomplete section. Store data in todoData object.
     todos.forEach(function (todoItem) {
         if (todoItem.completed === true) {
             todoData.status = 'class="completed';
