@@ -13,10 +13,10 @@ Base Mode:
 - [x] Store complete true or false in database
 - [x] Delete button click removes task from database and view. DELETE request
 - [x] Inlclude .sql file
-- [ ] Style points
+- [x] Add styling
 
 Hard mode
-- [ ] Create are you sure? yes/no when deleting a task
+- [x] Create are you sure? yes/no when deleting a task
 
 Pro Mode
 - [x] Bring completed tasks to bottom of page, remaining tasks stay at top

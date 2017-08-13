@@ -1,4 +1,5 @@
 console.log('client.js sourced');
+var deleteConfirmationAnswered = true;
 
 $(document).ready(function () {
     console.log('jquery sourced');
@@ -7,7 +8,6 @@ $(document).ready(function () {
     $('#createTask').on('click', createTask);
     $('#tasks').on('click', '.completeButton', completeTask);
     $('#tasks').on('click', '.deleteButton', confirmDelete);
-
 });
 
 function createTask() {
@@ -15,15 +15,17 @@ function createTask() {
         task: $('#addTaskInput').val(),
         completed: false
     }
-    $.ajax({
-        method: 'POST',
-        url: '/tasks',
-        data: newTask,
-        success: function (response) {
-            $('#addTaskInput').val('');
-            getTasks();
-        }
-    })
+    if (newTask.task.length !== 0) {
+        $.ajax({
+            method: 'POST',
+            url: '/tasks',
+            data: newTask,
+            success: function (response) {
+                $('#addTaskInput').val('');
+                getTasks();
+            }
+        })
+    }
 }
 
 function getTasks() {
@@ -37,7 +39,7 @@ function getTasks() {
 }
 
 function completeTask() {
-    var taskId = $(this).parent().parent().data().id;
+    var taskId = $(this).parent().parent().parent().data().id;
 
     if ($(this).parent().hasClass('completed')) {
         var newCompleteStatus = false
@@ -57,49 +59,44 @@ function completeTask() {
     })
 }
 
-function deleteTask(taskId) {
-    // var taskId = $(this).parent().parent().data().id;
-
-    $.ajax({
-        method: 'DELETE',
-        url: '/tasks/' + taskId,
-        success: function (response) {
-            getTasks();
-        }
-    })
-}
-
 function confirmDelete() {
-    var taskId = $(this).parent().parent().data().id;
+    if (deleteConfirmationAnswered === true) {
+        deleteConfirmationAnswered = false;
+        console.log('delete button clicked', deleteConfirmationAnswered);
 
-    $('#deleteConfirm').html('<p>Are you sure you want to delete? <button class="confirmDeleteYes">Yes</button><button class="confirmDeleteNo">No</button></p>');
+        var taskId = $(this).parent().parent().parent().data().id;
 
-    $('#tasks').on('click', '.confirmDeleteYes', function(){
-        $.ajax({
-            method: 'DELETE',
-            url: '/tasks/' + taskId,
-            success: function (response) {
-                getTasks();
-                $('#deleteConfirm').html('');
-            }
-        })
-    });
-    $('#tasks').on('click', '.confirmDeleteNo', function() {
-        $('#deleteConfirm').html('');        
-    });
+        $('#deleteConfirm').html('<p>Are you sure you want to delete the task: <em>' + $(this).parent().parent().parent().children('.task').text() + '</em>? <button class="confirmDeleteYes btn btn-primary">Yes</button><button class="confirmDeleteNo btn btn-danger">No</button></p>');
 
+        $('#tasks').on('click', '.confirmDeleteYes', function () {
+            $.ajax({
+                method: 'DELETE',
+                url: '/tasks/' + taskId,
+                success: function (response) {
+                    getTasks();
+                    $('#deleteConfirm').html('');
+                    deleteConfirmationAnswered = true;
+                }
+            })
+        });
+        $('#tasks').on('click', '.confirmDeleteNo', function () {
+            $('#deleteConfirm').html('');
+            deleteConfirmationAnswered = true;
+        });
+    } else {
+        alert('Confirm if you want to delete previous item selected first');
+    }
 }
-
-
 
 function displayTasks(tasks) {
     $('#completedTasks, #incompleteTasks').empty();
-    var taskData = {}
+    var taskData = {};
+
     tasks.forEach(function (taskItem) {
         if (taskItem.completed === true) {
             taskData.status = 'class="completed';
             taskData.$sectionAddedTo = $('#completedTasks');
-            taskData.buttonText = 'Not Done'
+            taskData.buttonText = 'Move to Incomplete'
         } else {
             taskData.status = 'class="incomplete';
             taskData.$sectionAddedTo = $('#incompleteTasks');
@@ -108,9 +105,11 @@ function displayTasks(tasks) {
 
         taskData.$sectionAddedTo.prepend(
             '<div class="task-item" data-id="' + taskItem.id + '">' +
-            '<span ' + taskData.status + '"><button class="completeButton">' + taskData.buttonText + '</button></span>' +
-            '<span class="task">' + taskItem.task + '</span>' +
-            '<span class="delete"><button class="deleteButton">Delete</button></span>' +
+            '<div class="task">' + taskItem.task + '</div>' +
+            '<div>' +
+            '<span ' + taskData.status + '"><button class="completeButton btn btn-primary">' + taskData.buttonText + '</button></span>' +
+            '<span class="delete"><button class="deleteButton btn btn-danger">Delete</button></span>' +
+            '</div>' +
             '</div>'
         );
 
