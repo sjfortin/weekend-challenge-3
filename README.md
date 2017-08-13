@@ -19,7 +19,7 @@ Hard mode
 - [ ] Create are you sure? yes/no when deleting a task
 
 Pro Mode
-- [ ] Bring completed tasks to bottom of page, remaining tasks stay at top
+- [x] Bring completed tasks to bottom of page, remaining tasks stay at top
 
 Stretch
 - [ ] Enable editing of the tasks

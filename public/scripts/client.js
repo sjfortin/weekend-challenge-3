@@ -38,16 +38,21 @@ function getTasks() {
 
 function completeTask() {
     var taskId = $(this).parent().parent().data().id;
-    var status = $(this).parent();
+
+    if ($(this).parent().hasClass('completed')) {
+        var newCompleteStatus = false
+    } else {
+        var newCompleteStatus = true;
+    }
 
     $.ajax({
         method: 'PUT',
         url: '/tasks/' + taskId,
         data: {
-            completed: true
+            completed: newCompleteStatus
         },
         success: function (response) {
-            status.addClass('completed');
+            getTasks();
         }
     })
 }
@@ -65,12 +70,22 @@ function deleteTask() {
 }
 
 function displayTasks(tasks) {
-    $('#tasks').empty();
-    console.log('Display tasks', tasks);
+    $('#completedTasks, #incompleteTasks').empty();
+    var taskData = {}
     tasks.forEach(function (taskItem) {
-        $('#tasks').append(
+        if (taskItem.completed === true) {
+            taskData.status = 'class="completed';
+            taskData.$sectionAddedTo = $('#completedTasks');
+            taskData.buttonText = 'Not Done'
+        } else {
+            taskData.status = 'class="incomplete';
+            taskData.$sectionAddedTo = $('#incompleteTasks');
+            taskData.buttonText = 'Complete'
+        }
+
+        taskData.$sectionAddedTo.prepend(
             '<div class="task-item" data-id="' + taskItem.id + '">' +
-            '<span class="status"><button class="completeButton">Complete</button></span>' +
+            '<span ' + taskData.status + '"><button class="completeButton">' + taskData.buttonText + '</button></span>' +
             '<span class="task">' + taskItem.task + '</span>' +
             '<span class="delete"><button class="deleteButton">Delete</button></span>' +
             '</div>'
