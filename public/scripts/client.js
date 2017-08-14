@@ -7,7 +7,7 @@ $(document).ready(function () {
     getTodos()
 
     // Event Listeners
-    $('#createTodo').on('click', createTodo);
+    $('#createTodo').on('submit', createTodo);
     $('#todos').on('click', '.completeButton', completeTodo);
     $('#todos').on('click', '.deleteButton', confirmDelete);
     $('#todos').on('click', '.confirmDeleteYes', deleteTodo);
@@ -16,6 +16,7 @@ $(document).ready(function () {
 
 // Save todo input to database
 function createTodo() {
+    event.preventDefault();
     var newTodo = {
         todo: $('#addTodoInput').val(),
         completed: false
@@ -24,10 +25,11 @@ function createTodo() {
         $.ajax({
             method: 'POST',
             url: '/todos',
-            data: newTodo,
-            success: function (response) {
-                getTodos();
-            }
+            data: newTodo
+        }).done(function (response) {
+            getTodos();
+        }).fail(function (response) {
+            console.log('Error:', response);
         })
     }
 }
@@ -62,7 +64,7 @@ function confirmDelete() {
 
     confirmDeleteDiv.html(
         '<span>Are you sure? <button class="confirmDeleteYes btn btn-sm btn-primary">Yes</button><button class="confirmDeleteNo btn btn-sm btn-default">No</button></span>');
-    
+
     confirmDeleteDiv.data('deleteid', todoId);
     confirmDeleteDiv.addClass('confirm-styled');
 }
@@ -70,7 +72,7 @@ function confirmDelete() {
 // Delete todo from view and database if user confirms deletion
 function deleteTodo() {
     var todoId = $(this).parent().parent().data().deleteid;
-    
+
     $.ajax({
         method: 'DELETE',
         url: '/todos/' + todoId,
