@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var pool = require('../modules/pool');
 
+// Save todo to database
 router.post('/', function (req, res) {
     pool.connect(function (errorConnectingToDatabase, client, done) {
         if (errorConnectingToDatabase) {
@@ -21,6 +22,7 @@ router.post('/', function (req, res) {
     });
 });
 
+// Send todos from database to client.js
 router.get('/', function (req, res) {
     pool.connect(function (errorConnectingToDatabase, client, done) {
         if (errorConnectingToDatabase) {
@@ -40,6 +42,7 @@ router.get('/', function (req, res) {
     });
 });
 
+// Update completed status in database
 router.put('/:id', function (req, res) {
     var todoId = req.params.id;
     console.log('');
@@ -63,6 +66,7 @@ router.put('/:id', function (req, res) {
     });
 });
 
+// Delete todo in database
 router.delete('/:id', function (req, res) {
     var todoId = req.params.id;
     console.log('');
