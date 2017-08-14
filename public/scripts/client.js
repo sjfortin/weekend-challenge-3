@@ -54,30 +54,36 @@ function completeTodo() {
     })
 }
 
-// Display are you sure you?
+// Display are you sure?
 function confirmDelete() {
-        var todoId = $(this).parent().parent().parent().data().id;        
-        $(this).parent().siblings('.confirm').html('<span data-deleteid="' + todoId + '">Are you sure? <button class="confirmDeleteYes btn btn-sm btn-primary">Yes</button><button class="confirmDeleteNo btn btn-sm btn-default">No</button></span>');
-        $(this).parent().siblings('.confirm').addClass('confirm-styled');        
-    }
+    var todoId = $(this).parent().parent().parent().data().id;
+
+    var confirmDeleteDiv = $(this).parent().siblings('.confirm');
+
+    confirmDeleteDiv.html(
+        '<span>Are you sure? <button class="confirmDeleteYes btn btn-sm btn-primary">Yes</button><button class="confirmDeleteNo btn btn-sm btn-default">No</button></span>');
+    
+    confirmDeleteDiv.data('deleteid', todoId);
+    confirmDeleteDiv.addClass('confirm-styled');
+}
 
 // Delete todo from view and database if user confirms deletion
 function deleteTodo() {
-    var todoId = $(this).parent().data().deleteid;
+    var todoId = $(this).parent().parent().data().deleteid;
     
-        $.ajax({
-            method: 'DELETE',
-            url: '/todos/' + todoId,
-            success: function (response) {
-                getTodos();
-            }
-        })
+    $.ajax({
+        method: 'DELETE',
+        url: '/todos/' + todoId,
+        success: function (response) {
+            getTodos();
+        }
+    })
 }
 
 // Remove delete text and buttons if user doesn't want to delete
 function resetDeleteTodo() {
     $(this).closest('.confirm').removeClass('confirm-styled');
-    $(this).parent().parent().html('');    
+    $(this).parent().parent().html('');
 }
 
 // GET todos from database
@@ -109,13 +115,16 @@ function displayTodos(todos) {
             todoData.buttonText = 'Complete'
         }
 
-        todoData.$sectionAddedTo.prepend(
-            '<div class="todo-item" data-id="' + todoItem.id + '">' +
+        var $todoItem = $('<div class="todo-item"></div>');
+        $todoItem.data('id', todoItem.id);
+
+        todoData.$sectionAddedTo.prepend($todoItem);
+
+        $todoItem.append(
             '<div class="todo"><h4>' + todoItem.todo + '</h4></div>' +
             '<div>' +
             '<span ' + todoData.status + '"><button class="completeButton btn btn-primary">' + todoData.buttonText + '</button></span>' +
             '<span class="delete"><button class="deleteButton btn btn-danger">Delete</button></span><p class="confirm"></p>' +
-            '</div>' +
             '</div>'
         );
     });

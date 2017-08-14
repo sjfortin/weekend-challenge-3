@@ -29,7 +29,7 @@ router.get('/', function (req, res) {
             console.log('Error connecting to database', errorConnectingToDatabase);
             res.sendStatus(500);
         } else {
-            client.query('SELECT * FROM to_do_app ;', function (errorMakingQuery, result) {
+            client.query('SELECT * FROM to_do_app ORDER BY todo DESC;', function (errorMakingQuery, result) {
                 done();
                 if (errorMakingQuery) {
                     console.log('Error making database query', errorMakingQuery);
@@ -51,7 +51,7 @@ router.put('/:id', function (req, res) {
             console.log('Error connecting to database', errorConnectingToDatabase);
             res.sendStatus(500);
         } else {
-            client.query('UPDATE to_do_app  SET completed=$1 WHERE id=$2',
+            client.query('UPDATE to_do_app SET completed=$1 WHERE id=$2',
                 [req.body.completed, todoId],
                 function (errorMakingQuery, result) {
                     done();
