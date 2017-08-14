@@ -14,6 +14,7 @@ Base Mode:
 - [x] Delete button click removes task from database and view. DELETE request
 - [x] Inlclude .sql file
 - [x] Add styling
+- [x] Update data-id to use hidden jQuery .data() method
 
 Hard mode
 - [x] Create are you sure? yes/no when deleting a task
