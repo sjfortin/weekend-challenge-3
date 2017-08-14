@@ -67,16 +67,14 @@ function completeTodo() {
     })
 }
 
-// Display are you sure you want to delete text and buttons
+// Display are you sure you?
 function confirmDelete() {
-        var todoId = $(this).parent().parent().parent().data().id;
-        var $buttonDiv = $(this).parent().parent();
-        console.log($(this).parent().siblings().html());
-        
-        $(this).parent().siblings('.confirm').html('<p data-deleteid="' + todoId + '">Are you sure you want to delete the todo: <em>' + $(this).parent().parent().parent().children('.todo').text() + '</em>? <button class="confirmDeleteYes btn btn-sm btn-primary">Yes</button><button class="confirmDeleteNo btn btn-sm btn-danger">No</button></p>');
-}
+        var todoId = $(this).parent().parent().parent().data().id;        
+        $(this).parent().siblings('.confirm').html('<span data-deleteid="' + todoId + '">Are you sure? <button class="confirmDeleteYes btn btn-sm btn-primary">Yes</button><button class="confirmDeleteNo btn btn-sm btn-default">No</button></span>');
+        $(this).parent().siblings('.confirm').addClass('confirm-styled');        
+    }
 
-// Delete todo from view and database
+// Delete todo from view and database if user confirms deletion
 function deleteTodo() {
     var todoId = $(this).parent().data().deleteid;
     
@@ -91,7 +89,8 @@ function deleteTodo() {
 
 // Remove delete text and buttons if user doesn't want to delete
 function resetDeleteTodo() {
-    $(this).parent().html('');
+    $(this).closest('.confirm').removeClass('confirm-styled');
+    $(this).parent().parent().html('');    
 }
 
 // Display all todos on the view
@@ -116,7 +115,7 @@ function displayTodos(todos) {
             '<div class="todo"><h4>' + todoItem.todo + '</h4></div>' +
             '<div>' +
             '<span ' + todoData.status + '"><button class="completeButton btn btn-primary">' + todoData.buttonText + '</button></span>' +
-            '<span class="delete"><button class="deleteButton btn btn-danger">Delete</button></span><span class="confirm"></span>' +
+            '<span class="delete"><button class="deleteButton btn btn-danger">Delete</button></span><p class="confirm"></p>' +
             '</div>' +
             '</div>'
         );

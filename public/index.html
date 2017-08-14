@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="vendors/bootstrap.min.css">
     <link rel="stylesheet" href="styles/styles.css">
     <script src="vendors/jquery.js"></script>
+    <script src="vendors/bootstrap.min.js"></script>
     <script src="scripts/client.js"></script>
 </head>
 
@@ -18,21 +19,22 @@
         <div class="row">
             <div class="col-md-12">
                 <h1>Add Todos</h1>
-                <div class="form">
+                <form class="form-inline">
                     <div class="form-group">
-                        <input class="form-control" rows="2" id="addTodoInput" placeholder="Add Todo" autofocus="">
-                        <button class="btn btn-success" id="createTodo">Add Todo</button>
+                        <input class="form-control" id="addTodoInput" placeholder="Add Todo" autofocus="">
                     </div>
-                </div>
+                    <button class="btn btn-primary" id="createTodo">Add Todo</button>
+                </form>
                 <div id="todos">
-                    <h1>Incomplete Todos</h1>
+                    <h2>Incomplete Todos</h2>
                     <div id="incompleteTodos"></div>
-                    <h1>Completed Todos</h1>
+                    <h2>Completed Todos</h2>
                     <div id="completedTodos"></div>
                 </div>
             </div>
         </div>
     </div>
+
 </body>
 
 </html>
