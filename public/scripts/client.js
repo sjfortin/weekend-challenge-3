@@ -26,22 +26,10 @@ function createTodo() {
             url: '/todos',
             data: newTodo,
             success: function (response) {
-                $('#addTodoInput').val('');
                 getTodos();
             }
         })
     }
-}
-
-// GET todos from database
-function getTodos() {
-    $.ajax({
-        method: 'GET',
-        url: '/todos',
-        success: function (response) {
-            displayTodos(response);
-        }
-    })
 }
 
 // Toggle todo from complete to incomplete and update in database
@@ -92,9 +80,21 @@ function resetDeleteTodo() {
     $(this).parent().parent().html('');    
 }
 
+// GET todos from database
+function getTodos() {
+    $.ajax({
+        method: 'GET',
+        url: '/todos',
+        success: function (response) {
+            displayTodos(response);
+        }
+    })
+}
+
 // Display all todos on the view
 function displayTodos(todos) {
     $('#completedTodos, #incompleteTodos').empty();
+    $('#addTodoInput').val('');
     var todoData = {};
 
     // Determine if todo should be added to the complete or incomplete section. Store data in todoData object.
@@ -118,6 +118,13 @@ function displayTodos(todos) {
             '</div>' +
             '</div>'
         );
-
     });
+
+    if ($('#completedTodos').children().length === 0) {
+        $('#completedTodos').html('<h4>Complete something. Do it!</h4>');
+    }
+
+    if ($('#incompleteTodos').children().length === 0) {
+        $('#incompleteTodos').html('<h4>Add a new todo!</h4>');
+    }
 }
