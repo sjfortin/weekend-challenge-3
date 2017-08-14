@@ -1,5 +1,4 @@
 console.log('client.js sourced');
-var deleteConfirmationAnswered = true;
 
 $(document).ready(function () {
     console.log('jquery sourced');
