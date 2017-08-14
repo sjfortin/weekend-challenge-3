@@ -38,6 +38,7 @@ function createTodo() {
 function completeTodo() {
     var todoId = $(this).parent().parent().parent().data().id;
 
+    // change complete status based on whether todo is currenty complete or incomplete
     if ($(this).parent().hasClass('completed')) {
         var newCompleteStatus = false
     } else {
