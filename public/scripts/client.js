@@ -1,7 +1,4 @@
-console.log('client.js sourced');
-
 $(document).ready(function () {
-    console.log('jquery sourced');
 
     // Display todos on DOM load
     getTodos()
