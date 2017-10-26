@@ -32,9 +32,6 @@ CREATE TABLE to_do_app (
 
 <img src="public//todo-list.png" width="400" />
 
-## Authors
-
-* Sam Fortin
 
 Completed Tasks:
 - [x] Input field for user to create a task. Display task on the DOM
